@@ -1,0 +1,11 @@
+{
+  "generator-mendix": {
+    "promptValues": {
+      "copyright": "Mansystems 2018",
+      "license": "Apache 2",
+      "author": "Fabian Recktenwald",
+      "boilerplate": "empty",
+      "widgetoptions": []
+    }
+  }
+}
