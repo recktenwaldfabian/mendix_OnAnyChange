@@ -1,3 +1,8 @@
-# Mendix Widget Boilerplate
+# Trigger Event on any attribute change
 
-See [AppStoreWidgetBoilerplate](https://github.com/mendix/AppStoreWidgetBoilerplate/) for an example
+This widget will listen to all changes of attributes
+ in the context entity and trigger a microflow
+ or nanoflow on a change.
+
+ Usefull if you want to check if a user has entered any
+ data on a page.
