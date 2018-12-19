@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="Icon.svg">
+   sodipodi:docname="Icon.svg"
+   inkscape:export-filename="C:\Users\recktenwaldf\Documents\GitHub\mendix_OnAnyChange\icon.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -39,8 +42,8 @@
      fit-margin-left="2"
      inkscape:window-width="1306"
      inkscape:window-height="762"
-     inkscape:window-x="2226"
-     inkscape:window-y="44"
+     inkscape:window-x="2205"
+     inkscape:window-y="50"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata5">
@@ -59,6 +62,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-52.690202,-26.604696)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.665;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4524"
+       width="97.820641"
+       height="79.111778"
+       x="48.948429"
+       y="20.793716" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.66499996;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 83.095869,29.754561 99.972637,40.547394 75.94331,78.122085 55.764268,92.136901 59.066542,67.329252 Z"
