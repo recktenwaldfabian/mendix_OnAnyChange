@@ -1,49 +1,29 @@
 define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
+    "dojo/_base/lang"
 
-    "mxui/dom",
-    "dojo/dom",
-    "dojo/dom-prop",
-    "dojo/dom-geometry",
-    "dojo/dom-class",
-    "dojo/dom-style",
-    "dojo/dom-construct",
-    "dojo/_base/array",
-    "dojo/_base/lang",
-    "dojo/text",
-    "dojo/html",
-    "dojo/_base/event",
-
-
-], function (declare, _WidgetBase, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent) {
+], function (declare, _WidgetBase, lang ) {
     "use strict";
 
     return declare("OnAnyChange.widget.OnAnyChange", [ _WidgetBase ], {
 
-
         // Internal variables.
-        _handles: null,
         _contextObj: null,
 
         // parameters
         microflowAction: null,
         nanoflowAction: null,
 
-        constructor: function () {
-            this._handles = [];
-        },
-
-        postCreate: function () {
-            logger.debug(this.id + ".postCreate");
-        },
-
         update: function (obj, callback) {
             logger.debug(this.id + ".update");
 
-            this._contextObj = obj;
+            if ( this._contextObj && ( !obj || obj.getGuid() != this._contextObj.getGuid() )) {
+                this.unsubscribeAll();
+            }
+            if ( obj && ( !this._contextObj || obj.getGuid() != this._contextObj.getGuid() )) {
+                this._contextObj = obj;
 
-            if ( this._contextObj ) {
                 var attributes = this._contextObj.getAttributes();
                 attributes.forEach( function( attr ) {
                     this.subscribe({
@@ -55,6 +35,8 @@ define([
                     })
                 }, this);
             }
+            this._contextObj = obj;
+
             this._executeCallback(callback, "_update");
         },
 
