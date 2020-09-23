@@ -1,6 +1,6 @@
 {
   "name": "OnAnyChange",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Trigger action on any attribute change",
   "license": "Apache 2",
   "author": "Fabian Recktenwald",

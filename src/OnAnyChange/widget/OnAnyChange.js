@@ -33,9 +33,21 @@ define([
                         callback: lang.hitch(this, function (guid, attr, value) {
                             // some cases were reported where this event was triggered without any change
                             // thus we check if the value really changed
-                            if (value !== oldValue) {
-                                this._runAction();
-                                oldValue = value;
+                            if (this._contextObj.isDate(attr)) {
+                                if (value.getTime() !== oldValue.getTime()) {
+                                    this._runAction();
+                                    oldValue = value;
+                                }
+                            } else if (this._contextObj.isNumeric(attr) && value!=null && oldValue!=null && value.eq) {                                
+                                if (! value.eq(oldValue) ) {
+                                    this._runAction();
+                                    oldValue = value;
+                                }
+                            } else {
+                                if (value !== oldValue) {
+                                    this._runAction();
+                                    oldValue = value;
+                                }
                             }
                         })
                     })
