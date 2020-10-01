@@ -6,12 +6,15 @@ define([
 ], function (declare, _WidgetBase, lang) {
     "use strict";
 
-    return declare("OnAnyChange.widget.OnAnyChange", [_WidgetBase], {
+    return declare("OnAnyChange.widget.OnSpecificChange", [_WidgetBase], {
 
         // Internal variables.
         _contextObj: null,
 
         // parameters
+        listenerEnum: null,
+        listenerAttr: null,
+        listenerAttrs: null,
         microflowAction: null,
         nanoflowAction: null,
 
@@ -23,39 +26,69 @@ define([
             }
             if (obj && (!this._contextObj || obj.getGuid() != this._contextObj.getGuid())) {
                 this._contextObj = obj;
-
-                var attributes = this._contextObj.getAttributes();
-                attributes.forEach(function (attr) {
-                    var oldValue = this._contextObj.get(attr);
+                var timer = this.intervalTime;
+                var anyAttributes = this._contextObj.getAttributes();
+                var listAttributes = this.listenerAttrs;
+                
+                if (this.listenerEnum === "any" || this.listenerEnum === "list" || (this.listenerEnum === "single" && !this.listenerAttr)) {
+                    if (this.listenerEnum === "list" && this.listenerAttrs.length > 0) {
+                        listAttributes.forEach(function (attr) {
+                            var oldValue = this._contextObj.get(attr["listenerAttr"]);
+                            this.subscribe({
+                                guid: this._contextObj.getGuid(),
+                                attr: attr["listenerAttr"],
+                                callback: lang.hitch(this, function (guid, attr, value) {
+                                    this._checkIfChanged(guid, attr, oldValue, value);
+                                })
+                            });
+                        }, this);
+                    } else {
+                        anyAttributes.forEach(function (attr) {
+                            var oldValue = this._contextObj.get(attr);
+                            this.subscribe({
+                                guid: this._contextObj.getGuid(),
+                                attr: attr,
+                                callback: lang.hitch(this, function (guid, attr, value) {
+                                    this._checkIfChanged(guid, attr, oldValue, value);
+                                })
+                            })
+                        }, this);
+                    }
+                } else {
+                    var oldValue = this._contextObj.get(this.listenerAttr);
                     this.subscribe({
                         guid: this._contextObj.getGuid(),
-                        attr: attr,
+                        attr: this.listenerAttr,
                         callback: lang.hitch(this, function (guid, attr, value) {
-                            // some cases were reported where this event was triggered without any change
-                            // thus we check if the value really changed
-                            if (this._contextObj.isDate(attr)) {
-                                if (value.getTime() !== oldValue.getTime()) {
-                                    this._runAction();
-                                    oldValue = value;
-                                }
-                            } else if (this._contextObj.isNumeric(attr) && value!=null && oldValue!=null && value.eq) {                                
-                                if (! value.eq(oldValue) ) {
-                                    this._runAction();
-                                    oldValue = value;
-                                }
-                            } else {
-                                if (value !== oldValue) {
-                                    this._runAction();
-                                    oldValue = value;
-                                }
-                            }
+                            this._checkIfChanged(guid, attr, oldValue, value);
                         })
-                    })
-                }, this);
+                    });
+                }
             }
             this._contextObj = obj;
 
             this._executeCallback(callback, "_update");
+        },
+
+        _checkIfChanged: function (guid, attr, oldValue, value) {
+            // some cases were reported where this event was triggered without any change
+            // thus we check if the value really changed
+            if (this._contextObj.isDate(attr)) {
+                if (value.getTime() !== oldValue.getTime()) {
+                    this._runAction();
+                    oldValue = value;
+                }
+            } else if (this._contextObj.isNumeric(attr) && value!=null && oldValue!=null && value.eq) {                                
+                if (! value.eq(oldValue) ) {
+                    this._runAction();
+                    oldValue = value;
+                }
+            } else {
+                if (value !== oldValue) {
+                    this._runAction();
+                    oldValue = value;
+                }
+            }
         },
 
         _runAction: function () {
@@ -118,4 +151,4 @@ define([
     });
 });
 
-require(["OnAnyChange/widget/OnAnyChange"]);
+require(["OnAnyChange/widget/OnSpecificChange"]);
