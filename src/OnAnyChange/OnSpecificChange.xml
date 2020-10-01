@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="OnAnyChange.widget.OnSpecificChange" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>OnSpecificChange</name>
+    <description>Trigger selected action when any specified attributes of context object are changed.</description>
+
+    <icon />
+
+    <properties>
+        <property key="listenerEnum" type="enumeration" defaultValue="any">
+            <caption>Listener Type</caption>
+            <category>General</category>
+            <description>Listen to all attributes or a single attribute?</description>
+            <enumerationValues>
+                <enumerationValue key="any">Any</enumerationValue>
+                <enumerationValue key="list">List</enumerationValue>
+                <enumerationValue key="single">Single</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="listenerAttr" type="attribute" required="false">
+            <caption>Attribute</caption>
+            <category>General</category>
+            <description>If Listener Type is set to Single, this field is required or the widget will default back to Any.</description>
+            <attributeTypes>
+                <attributeType name="Binary" />
+                <attributeType name="Boolean" />
+                <attributeType name="DateTime" />
+                <attributeType name="Decimal" />
+                <attributeType name="Enum" />
+                <attributeType name="Integer" />
+                <attributeType name="Long" />
+                <attributeType name="String" />
+            </attributeTypes>
+        </property>
+        <property key="listenerAttrs" type="object" isList="true" required="false">
+            <caption>Attributes</caption>
+            <category>General</category>
+            <description>If Listener Type is set to List, there must be at least one attribute here or the widget will default back to Any.</description>
+            <properties>
+                <property key="listenerAttr" type="attribute">
+                    <caption>Attribute</caption>
+                    <category>General</category>
+                    <description>Select an attribute.</description>
+                    <attributeTypes>
+                        <attributeType name="Binary" />
+                        <attributeType name="Boolean" />
+                        <attributeType name="DateTime" />
+                        <attributeType name="Decimal" />
+                        <attributeType name="Enum" />
+                        <attributeType name="Integer" />
+                        <attributeType name="Long" />
+                        <attributeType name="String" />
+                    </attributeTypes>
+                </property>
+            </properties>
+        </property>
+        <property key="microflowAction" type="microflow" required="false" defaultValue="">
+            <caption>OnChangeMicroflow</caption>
+            <category>Behavior</category>
+            <description>Microflow to be triggered on change</description>
+            <returnType type="Void"/>
+        </property>
+        <property key="nanoflowAction" type="nanoflow" required="false" defaultValue="">
+            <caption>OnChangeNanoflow</caption>
+            <category>Behavior</category>
+            <description>Nanoflow to be triggered on change</description>
+            <returnType type="Void"/>
+        </property>
+    </properties>
+</widget>
