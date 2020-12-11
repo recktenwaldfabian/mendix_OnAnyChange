@@ -26,48 +26,28 @@ define([
             }
             if (obj && (!this._contextObj || obj.getGuid() != this._contextObj.getGuid())) {
                 this._contextObj = obj;
-                var timer = this.intervalTime;
-                var anyAttributes = this._contextObj.getAttributes();
-                var listAttributes = this.listenerAttrs;
-                
-                if (this.listenerEnum === "any" || this.listenerEnum === "list" || (this.listenerEnum === "single" && !this.listenerAttr)) {
-                    if (this.listenerEnum === "list" && this.listenerAttrs.length > 0) {
-                        listAttributes.forEach(function (attr) {
-                            var oldValue = this._contextObj.get(attr["listenerAttr"]);
-                            this.subscribe({
-                                guid: this._contextObj.getGuid(),
-                                attr: attr["listenerAttr"],
-                                callback: lang.hitch(this, function (guid, attr, value) {
-                                    this._checkIfChanged(guid, attr, oldValue, value);
-                                })
-                            });
-                        }, this);
-                    } else {
-                        anyAttributes.forEach(function (attr) {
-                            var oldValue = this._contextObj.get(attr);
-                            this.subscribe({
-                                guid: this._contextObj.getGuid(),
-                                attr: attr,
-                                callback: lang.hitch(this, function (guid, attr, value) {
-                                    this._checkIfChanged(guid, attr, oldValue, value);
-                                })
-                            })
-                        }, this);
-                    }
+                if (this.listenerEnum === "list" && this.listenerAttrs.length > 0) {
+                    this.listenerAttrs.forEach(attr => this._subscribeAttributeChange(attr.listenerAttr), this);
+                } else if (this.listenerEnum === "single" && this.listenerAttr) {
+                    this._subscribeAttributeChange(this.listenerAttr);
                 } else {
-                    var oldValue = this._contextObj.get(this.listenerAttr);
-                    this.subscribe({
-                        guid: this._contextObj.getGuid(),
-                        attr: this.listenerAttr,
-                        callback: lang.hitch(this, function (guid, attr, value) {
-                            this._checkIfChanged(guid, attr, oldValue, value);
-                        })
-                    });
+                    this._contextObj.getAttributes().forEach(attr => this._subscribeAttributeChange(attr), this);
                 }
             }
             this._contextObj = obj;
 
             this._executeCallback(callback, "_update");
+        },
+
+        _subscribeAttributeChange: function (attr) {
+            var oldValue = this._contextObj.get(attr);
+            this.subscribe({
+                guid: this._contextObj.getGuid(),
+                attr: attr,
+                callback: lang.hitch(this, function (guid, attr, value) {
+                    this._checkIfChanged(guid, attr, oldValue, value);
+                })
+            })
         },
 
         _checkIfChanged: function (guid, attr, oldValue, value) {
@@ -78,8 +58,8 @@ define([
                     this._runAction();
                     oldValue = value;
                 }
-            } else if (this._contextObj.isNumeric(attr) && value!=null && oldValue!=null && value.eq) {                                
-                if (! value.eq(oldValue) ) {
+            } else if (this._contextObj.isNumeric(attr) && value != null && oldValue != null && value.eq) {
+                if (!value.eq(oldValue)) {
                     this._runAction();
                     oldValue = value;
                 }
