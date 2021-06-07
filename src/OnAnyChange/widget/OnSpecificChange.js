@@ -10,6 +10,7 @@ define([
 
         // Internal variables.
         _contextObj: null,
+        _oldValues: null,
 
         // parameters
         listenerEnum: null,
@@ -38,35 +39,40 @@ define([
 
             this._executeCallback(callback, "_update");
         },
+        
+        postCreate: function() {
+            this._oldValues = [];
+        },
 
         _subscribeAttributeChange: function (attr) {
-            var oldValue = this._contextObj.get(attr);
+            this._oldValues[attr] = this._contextObj.get(attr);
             this.subscribe({
                 guid: this._contextObj.getGuid(),
                 attr: attr,
                 callback: lang.hitch(this, function (guid, attr, value) {
-                    this._checkIfChanged(guid, attr, oldValue, value);
+                    this._checkIfChanged(guid, attr, value);
                 })
             })
         },
 
-        _checkIfChanged: function (guid, attr, oldValue, value) {
+        _checkIfChanged: function (guid, attr, value) {
+            var oldValue = this._oldValues[attr];
             // some cases were reported where this event was triggered without any change
             // thus we check if the value really changed
-            if (this._contextObj.isDate(attr)) {
+            if (this._contextObj.isDate(attr) && value != null && oldValue != null && value.getTime) {
                 if (value.getTime() !== oldValue.getTime()) {
                     this._runAction();
-                    oldValue = value;
+                    this._oldValues[attr] = value;
                 }
             } else if (this._contextObj.isNumeric(attr) && value != null && oldValue != null && value.eq) {
                 if (!value.eq(oldValue)) {
                     this._runAction();
-                    oldValue = value;
+                    this._oldValues[attr] = value;
                 }
             } else {
                 if (value !== oldValue) {
                     this._runAction();
-                    oldValue = value;
+                    this._oldValues[attr] = value;
                 }
             }
         },
